@@ -71,7 +71,7 @@ async function main() {
          await accounts[1].getAddress()
      );
 
-     await factory.createPool(
+    await factory.createPool(
          await erc20Krendel.getAddress(),
          await erc20RTK.getAddress(),
          reserveKrendel1, reserveRTK,
@@ -116,8 +116,6 @@ async function main() {
          factory: await factory.getAddress(),
          Routeraddr: await router.getAddress(),
          StakingAddr: await staking.getAddress(),
-         Pool1addr: await pool1.getAddress(),
-         Pool2addr: await pool2.getAddress(),
      }
 
      console.log(data)

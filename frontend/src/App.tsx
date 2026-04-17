@@ -10,7 +10,7 @@ import {PoolAPI} from "./api/PoolAPI.ts";
 
 function App() {
 
-    const {signer, loading, setLoading, api, pool1, pool2, loadPools, selectedPool, setPools,
+    const {signer, loading, setLoading, api, pool1, pool2, loadPools, selectedPool, setPools, LPtoken, balanceLP,
         totalPrice1, totalPrice2, getGerdaName, getKrendelName, getToken1ETH1, pools, balanceGerda, balanceKrendel, balanceRTK,
         getToken1ETH2, getRTKName, getToken2ETH1, getToken2ETH2, getData, auth} = useMyContext();
 
@@ -114,7 +114,8 @@ function App() {
                 totalPrice: total,
             };
 
-            console.log(token1Name, token2Name, total, newPoolAddress);
+            console.log("токены: ", token1Name, token2Name, "общее число: ", total, "адрес пула: ", newPoolAddress);
+            console.log("сколько 1 и 2 токена: ", token1Value, token2Value);
 
             setPools(prev => [...prev, newPool]);
 
@@ -141,6 +142,7 @@ function App() {
                         <div>
                             <h2>Ваши токены</h2>
                             <h3>{getGerdaName}: {balanceGerda} {getKrendelName}: {balanceKrendel} {getRTKName}: {balanceRTK}</h3>
+                            <h3>{LPtoken}: {balanceLP}</h3>
 
                             <button className="counter" onClick={() => {setVisibleSup(!visibleSup)}}>{!visibleSup ? "поддержать ликвидность" : "убрать окно"}</button>
                             <button className="counter" onClick={() => {setVisibleCreate(!visibleCreate)}}>{!visibleCreate ? "создать пул" : "убрать окно"}</button>

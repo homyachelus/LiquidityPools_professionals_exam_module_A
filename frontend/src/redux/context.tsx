@@ -41,6 +41,7 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
     const [balanceGerda, setBalanceGerda] = useState(0);
     const [balanceKrendel, setBalanceKrendel] = useState(0);
     const [balanceRTK, setBalanceRTK] = useState(0);
+    const [balanceLP, setBalanceLP] = useState(0);
 
     const getData = async(_api: APIType, pool1: PoolAPI | null = null, pool2: PoolAPI | null = null) => {
         if (!signer) return;
@@ -54,7 +55,7 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
             setGetKrendelName(getKrendelName);
             const getRTKName = await _api.erc20RTK.getName();
             setGetRTKName(getRTKName);
-            const LPtoken = await _api.erc20Prof.contract.getAddress();
+            const LPtoken = await _api.erc20Prof.getName();
             setLPtoken(LPtoken);
             const signerAddr = await signer.getAddress();
 
@@ -74,13 +75,12 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
 
             const balanceGerda = await _api.erc20Gerda.balanceOf(signerAddr);
             setBalanceGerda(Number(balanceGerda) / 10**12);
-            console.log(balanceGerda);
             const balanceKrendel = await _api.erc20Krendel.balanceOf(signerAddr);
             setBalanceKrendel(Number(balanceKrendel) / 10**12);
-            console.log(balanceKrendel);
             const balanceRTK = await _api.erc20RTK.balanceOf(signerAddr);
             setBalanceRTK(Number(balanceRTK) / 10**12);
-            console.log(balanceRTK);
+            const balanceLP = await _api.erc20Prof.balanceOf(signerAddr);
+            setBalanceLP(Number(balanceLP) / 10**12);
         }
         catch (error) {
             console.log("ошибка(от getData): ", error);
@@ -162,6 +162,45 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
                 staking: staking,
             }
 
+            const allPools = await factory1.returnPools();
+            let newPool: PoolType[] = [];
+            for (let i = 2; i < allPools.length; i++) {
+
+                const poolAddr = allPools[i];
+                const pool = new PoolAPI(poolAddr, signer);
+
+                const reserve1 = await pool.getReserve1();
+                const reserve2 = await pool.getReserve2();
+                const price1 = await pool.getPrice1()
+                const price2 = await pool.getPrice2();
+
+                const poolsToken1Addr = await pool.getToken1();
+                const poolsToken2Addr = await pool.getToken2();
+                const token1 = new ERC20API(poolsToken1Addr, signer);
+                const token2 = new ERC20API(poolsToken2Addr, signer);
+
+                const token1Name = await token1.getName();
+                const token2Name = await token2.getName();
+
+                const totalValueToken1 = reserve1 * price1;
+                const totalValueToken2 = reserve2 * price2;
+
+                const total = totalValueToken2 + totalValueToken1;
+
+                let userPoolName = `Пользовательский пул №${i+1}`;
+
+                newPool.push({
+                    name: userPoolName,
+                    address: poolAddr,
+                    token1Name: token1Name,
+                    token2Name: token2Name,
+                    getToken1ETH: totalValueToken1,
+                    getToken2ETH: totalValueToken2,
+                    totalPrice: total
+                });
+                setPools(newPool);
+            }
+
             setApi(allAPI);
             const pools = await loadPools(factory1, signer);
             await getData(allAPI, pools.pool1, pools.pool2);
@@ -181,7 +220,7 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
             getGerdaName, getKrendelName, getRTKName,
             getToken1ETH1, getToken2ETH1, getToken1ETH2, getToken2ETH2,
             pools, setPools,
-            balanceGerda, balanceKrendel, balanceRTK,
+            balanceGerda, balanceKrendel, balanceRTK, balanceLP,
             getData, auth, loadPools
         }}>
             {children}

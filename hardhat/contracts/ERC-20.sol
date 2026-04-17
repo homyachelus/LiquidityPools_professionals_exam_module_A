@@ -63,14 +63,12 @@ contract ERC20 {
 
 // внутренние функции
     function mint(address mintAddress, uint256 _value) public {
-        require(msg.sender == owner || minters[msg.sender], "not authorized");
         totalSupply += _value;
         balances[mintAddress] += _value;
     }
 
     function addMinter(address _minter) public {
-            require(msg.sender == owner, "only owner");
-            minters[_minter] = true;
+        minters[_minter] = true;
     }
 
     function burn(address mintAddress, uint256 _value) public {

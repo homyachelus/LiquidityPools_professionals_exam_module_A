@@ -41,6 +41,7 @@ export type MyPropsProvider = {
     balanceGerda: number
     balanceKrendel: number
     balanceRTK: number
+    balanceLP: number
 
     totalPrice1: number
     getToken1ETH1: number
