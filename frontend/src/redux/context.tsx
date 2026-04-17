@@ -43,12 +43,26 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
     const [balanceRTK, setBalanceRTK] = useState(0);
     const [balanceLP, setBalanceLP] = useState(0);
 
+    const [gerdaAddr, setGerdaAddr] = useState<string>("");
+    const [krendelAddr, setKrendelAddr] = useState<string>("");
+    const [rtkAddr, setRTKAddr] = useState<string>("");
+    const [profAddr, setProfAddr] = useState<string>("");
+
     const getData = async(_api: APIType, pool1: PoolAPI | null = null, pool2: PoolAPI | null = null) => {
         if (!signer) return;
         if (!pool1) return;
         if (!pool2) return;
 
         try{
+            const gerdaAddr = await _api.erc20Gerda.contract.getAddress();
+            setGerdaAddr(gerdaAddr);
+            const krendelAddr = await _api.erc20Krendel.contract.getAddress();
+            setKrendelAddr(krendelAddr);
+            const rtkAddr = await _api.erc20RTK.contract.getAddress();
+            setRTKAddr(rtkAddr);
+            const profAddr = await _api.erc20Prof.contract.getAddress();
+            setProfAddr(profAddr);
+
             const getGerdaName = await _api.erc20Gerda.getName();
             setGetGerdaName(getGerdaName);
             const getKrendelName = await _api.erc20Krendel.getName();
@@ -211,6 +225,7 @@ export const MyProvider = ({children}: {children?: ReactNode}) => {
     return (
         <MyContext.Provider value={{
             signer, api, LPtoken,
+            gerdaAddr, krendelAddr, rtkAddr, profAddr,
             amount, setAmount,
             loading, setLoading,
             tokenIn, setTokenIn,

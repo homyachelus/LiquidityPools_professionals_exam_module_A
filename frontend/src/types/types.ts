@@ -33,6 +33,11 @@ export type MyPropsProvider = {
     setLoading: React.Dispatch<React.SetStateAction<boolean | undefined>>
     api: APIType | null
 
+    gerdaAddr: string
+    krendelAddr: string
+    rtkAddr: string
+    profAddr: string
+
     getGerdaName: string
     getKrendelName: string
     getRTKName: string

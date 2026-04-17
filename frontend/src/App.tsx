@@ -90,6 +90,7 @@ function App() {
 
         setLoading(true);
         try {
+            console.log(_token1, _token2, _reserve1, _reserve2, _price1, _price2, _lpToken, _owner);
             const createPool = await api.factory.createPool(_token1, _token2, _reserve1, _reserve2, _price1, _price2, _lpToken, _owner);
             await createPool.wait();
 
@@ -142,7 +143,7 @@ function App() {
                         <div>
                             <h2>Ваши токены</h2>
                             <h3>{getGerdaName}: {balanceGerda} {getKrendelName}: {balanceKrendel} {getRTKName}: {balanceRTK}</h3>
-                            <h3>{LPtoken}: {balanceLP}</h3>
+                            <h3>{LPtoken}: {balanceLP * 10**12}</h3>
 
                             <button className="counter" onClick={() => {setVisibleSup(!visibleSup)}}>{!visibleSup ? "поддержать ликвидность" : "убрать окно"}</button>
                             <button className="counter" onClick={() => {setVisibleCreate(!visibleCreate)}}>{!visibleCreate ? "создать пул" : "убрать окно"}</button>
